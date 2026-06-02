@@ -1,0 +1,13 @@
+# Netlify configuration for Lapstream (Next.js App Router).
+# The official @netlify/plugin-nextjs runtime is auto-installed by Netlify
+# and provides ISR + server-side rendering support on the free tier.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  NODE_VERSION = "22"

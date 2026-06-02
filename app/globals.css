@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: #0a0a0f;
+  color: #f5f5fa;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Subtle racing-stripe background accent for the hero. */
+.apex-grid {
+  background-image:
+    radial-gradient(circle at 20% 0%, rgba(255, 45, 85, 0.12), transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(0, 229, 255, 0.1), transparent 45%);
+}
+
+::selection {
+  background: rgba(255, 45, 85, 0.4);
+}
+
+/* Animated gradient text for headlines. */
+.gradient-text {
+  background: linear-gradient(
+    100deg,
+    #ffffff 0%,
+    #ff2d55 35%,
+    #00e5ff 70%,
+    #ffffff 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 8s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: 300% 0;
+  }
+}
+
+/* Faint moving grid overlay (perspective floor vibe). */
+.apex-lines {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(circle at 50% 0%, black, transparent 75%);
+}
+
+/* Thin animated "scan line" accent. */
+.scanline {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 45, 85, 0.9),
+    transparent
+  );
+  animation: scan 4s ease-in-out infinite;
+}
+
+@keyframes scan {
+  0%,
+  100% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(100%);
+    opacity: 1;
+  }
+}
+
+.glass {
+  background: rgba(19, 19, 28, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gradient-text,
+  .scanline {
+    animation: none !important;
+  }
+}
