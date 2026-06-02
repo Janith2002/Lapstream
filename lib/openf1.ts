@@ -68,6 +68,32 @@ export async function getDriversForSession(
   return openf1<OpenF1Driver[]>(`drivers?session_key=${sessionKey}`);
 }
 
+/**
+ * GPS location samples for ALL drivers within a bounded time window.
+ * Historical data is immutable, so we cache it for a day — one small request
+ * powers the whole replay regardless of traffic (free-tier safe).
+ */
+export async function getLocations(
+  sessionKey: number,
+  startISO: string,
+  endISO: string,
+): Promise<OpenF1Location[]> {
+  return openf1<OpenF1Location[]>(
+    `location?session_key=${sessionKey}&date>=${startISO}&date<=${endISO}`,
+    60 * 60 * 24,
+  );
+}
+
+/** Race sessions for a year (newest first). */
+export async function getRaceSessions(
+  year: number,
+): Promise<OpenF1Session[]> {
+  const list = await getSessions({ year, session_type: "Race" });
+  return [...list].sort(
+    (a, b) => new Date(b.date_start).getTime() - new Date(a.date_start).getTime(),
+  );
+}
+
 /** Guard: returns true only if the session ended more than 30 min ago (free tier safe). */
 export function isHistorical(session: OpenF1Session, now: Date = new Date()): boolean {
   const end = new Date(session.date_end).getTime();

@@ -1,5 +1,6 @@
 import { formatDistanceToNowStrict } from "date-fns";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/motion/Reveal";
+import { UpdateBadge } from "@/components/UpdateBadge";
 import { getNews } from "@/lib/news";
 
 export const revalidate = 1800;
@@ -23,6 +24,9 @@ export default async function NewsPage() {
             Headlines aggregated from leading motorsport outlets. Stories open at
             the original source — we don&apos;t republish full articles.
           </p>
+          <div className="mt-3">
+            <UpdateBadge>Refreshes automatically ~every 30 min</UpdateBadge>
+          </div>
         </header>
       </Reveal>
 

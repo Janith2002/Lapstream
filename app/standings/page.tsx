@@ -3,6 +3,7 @@ import {
   ConstructorStandingsTable,
 } from "@/components/StandingsTable";
 import { Reveal } from "@/components/motion/Reveal";
+import { UpdateBadge } from "@/components/UpdateBadge";
 import { getDriverStandings, getConstructorStandings } from "@/lib/jolpica";
 
 export const revalidate = 1800;
@@ -30,6 +31,9 @@ export default async function StandingsPage() {
           <p className="mt-2 text-apex-muted">
             Updates automatically after each round.
           </p>
+          <div className="mt-3">
+            <UpdateBadge>Auto-updates ~30 min after each session</UpdateBadge>
+          </div>
         </header>
       </Reveal>
 

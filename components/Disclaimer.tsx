@@ -30,6 +30,19 @@ export function Disclaimer() {
           </a>
           , which are themselves unofficial. Please respect their rate limits.
         </p>
+        <div className="mt-4 rounded-lg border border-apex-border bg-apex-bg/50 p-3">
+          <p className="font-semibold text-white/80">⏱️ About updates</p>
+          <p className="mt-1">
+            Data refreshes <strong>automatically</strong> on a schedule — news
+            and standings about every 30 minutes, race results within ~10
+            minutes of the chequered flag, and the calendar hourly. Countdowns
+            and your local times update live in your browser. This is{" "}
+            <strong>&ldquo;near-live&rdquo;</strong>: figures appear shortly
+            after the source publishes them — it is <strong>not</strong>{" "}
+            second-by-second live timing during a race. Telemetry replays cover
+            past (historical) sessions only.
+          </p>
+        </div>
       </div>
     </footer>
   );

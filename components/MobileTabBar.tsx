@@ -27,12 +27,19 @@ const I = {
       <path d="M7 8h7M7 12h10M7 16h10" />
     </>
   ),
+  replay: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M10 9l5 3-5 3z" />
+    </>
+  ),
 };
 
 const tabs: Tab[] = [
   { href: "/", label: "Home", icon: I.home },
   { href: "/calendar", label: "Calendar", icon: I.calendar },
   { href: "/standings", label: "Standings", icon: I.trophy },
+  { href: "/replay", label: "Replay", icon: I.replay },
   { href: "/news", label: "News", icon: I.news },
 ];
 

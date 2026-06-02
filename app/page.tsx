@@ -8,6 +8,7 @@ import { Reveal, StaggerGroup, StaggerItem } from "@/components/motion/Reveal";
 import { TiltCard } from "@/components/motion/TiltCard";
 import { Podium, type PodiumEntry } from "@/components/Podium";
 import { CountUp } from "@/components/motion/CountUp";
+import { UpdateBadge } from "@/components/UpdateBadge";
 import {
   getSeasonSchedule,
   getDriverStandings,
@@ -138,6 +139,11 @@ export default async function HomePage() {
             </StaggerItem>
           ))}
         </StaggerGroup>
+        <div className="mt-4 flex justify-center sm:justify-start">
+          <UpdateBadge>
+            Near-live · auto-updates on a schedule, not real-time during races
+          </UpdateBadge>
+        </div>
       </section>
 
       {/* Championship snapshot */}

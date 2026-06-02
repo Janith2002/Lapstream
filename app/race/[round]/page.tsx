@@ -4,6 +4,7 @@ import { Podium, type PodiumEntry } from "@/components/Podium";
 import { ResultsTable } from "@/components/ResultsTable";
 import { LocalTime } from "@/components/LocalTime";
 import { Reveal } from "@/components/motion/Reveal";
+import { UpdateBadge } from "@/components/UpdateBadge";
 import { getRaceResults, getSeasonSchedule, normalizeRace } from "@/lib/jolpica";
 
 export const revalidate = 600;
@@ -98,6 +99,11 @@ export default async function RacePage({
             <p className="mt-1 text-sm text-apex-muted">
               <LocalTime utcIso={meta.raceStartUtc} pattern="EEEE d MMM yyyy, HH:mm" showZone />
             </p>
+          )}
+          {results.length > 0 && (
+            <div className="mt-3">
+              <UpdateBadge>Results sync ~10 min after the flag</UpdateBadge>
+            </div>
           )}
         </div>
       </Reveal>
