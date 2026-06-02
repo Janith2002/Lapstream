@@ -1,7 +1,10 @@
 # Lapstream — Motorsport Dashboard
 
+### 🔴 Live site: **[lapstream.netlify.app](https://lapstream.netlify.app/)**
+
 An **unofficial** motorsport data dashboard: season calendar, championship
-standings, results and (later) telemetry replay. Built to run at **zero cost**.
+standings, results, driver/team profiles, news, a 3D circuit globe and a
+telemetry replay. Built to run at **zero cost**.
 
 > ⚠️ **Not affiliated with Formula 1, the FIA, or any team.** "F1" and
 > "Formula 1" are trademarks of their respective owners. Data comes from the
