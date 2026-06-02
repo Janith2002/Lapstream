@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { DriverStanding, ConstructorStanding } from "@/lib/types";
 import { AnimatedBar } from "@/components/motion/AnimatedBar";
 
@@ -51,9 +52,12 @@ export function DriverStandingsTable({ rows }: { rows: DriverStanding[] }) {
                       className="inline-block h-4 w-1 rounded"
                       style={{ background: color }}
                     />
-                    <span className="font-semibold">
+                    <Link
+                      href={`/driver/${r.Driver.driverId}`}
+                      className="font-semibold transition hover:text-apex-accent hover:underline"
+                    >
                       {r.Driver.givenName} {r.Driver.familyName}
-                    </span>
+                    </Link>
                     {r.Driver.code && (
                       <span className="font-mono text-xs text-apex-muted">
                         {r.Driver.code}
@@ -62,7 +66,16 @@ export function DriverStandingsTable({ rows }: { rows: DriverStanding[] }) {
                   </div>
                 </td>
                 <td className="px-4 py-3 hidden text-apex-muted sm:table-cell">
-                  {team}
+                  {r.Constructors.at(-1) ? (
+                    <Link
+                      href={`/team/${r.Constructors.at(-1)!.constructorId}`}
+                      className="transition hover:text-white hover:underline"
+                    >
+                      {team}
+                    </Link>
+                  ) : (
+                    team
+                  )}
                 </td>
                 <td className="px-4 py-3 text-right tabular-nums">{r.wins}</td>
                 <td className="px-4 py-3 text-right">
@@ -119,7 +132,12 @@ export function ConstructorStandingsTable({
                       className="inline-block h-4 w-1 rounded"
                       style={{ background: color }}
                     />
-                    <span className="font-semibold">{r.Constructor.name}</span>
+                    <Link
+                      href={`/team/${r.Constructor.constructorId}`}
+                      className="font-semibold transition hover:text-apex-accent hover:underline"
+                    >
+                      {r.Constructor.name}
+                    </Link>
                   </div>
                 </td>
                 <td className="px-4 py-3 text-right tabular-nums">{r.wins}</td>

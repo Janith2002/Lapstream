@@ -8,6 +8,7 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/calendar", label: "Calendar" },
   { href: "/standings", label: "Standings" },
+  { href: "/news", label: "News" },
 ];
 
 export function Nav() {
@@ -30,7 +31,7 @@ export function Nav() {
           </span>
         </Link>
         <div className="flex items-center gap-2 sm:gap-3">
-          <ul className="flex items-center gap-0.5 text-sm sm:gap-1">
+          <ul className="hidden items-center gap-0.5 text-sm sm:flex sm:gap-1">
             {links.map((l) => {
               const active = isActive(l.href);
               return (

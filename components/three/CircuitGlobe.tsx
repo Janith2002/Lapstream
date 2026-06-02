@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Html } from "@react-three/drei";
+import { OrbitControls, Html, Stars } from "@react-three/drei";
 import * as THREE from "three";
 
 export interface GlobePoint {
+  round: number;
   name: string;
   locality: string;
   country: string;
@@ -75,7 +77,48 @@ function Continents() {
   );
 }
 
-function Pin({ point }: { point: GlobePoint }) {
+/** Glowing arcs connecting circuits in race order. */
+function RaceArcs({ points }: { points: GlobePoint[] }) {
+  const geo = useMemo(() => {
+    const verts: number[] = [];
+    for (let i = 0; i < points.length - 1; i++) {
+      const a = latLongToVec3(points[i].lat, points[i].long, R + 0.015);
+      const b = latLongToVec3(points[i + 1].lat, points[i + 1].long, R + 0.015);
+      const mid = a.clone().add(b).multiplyScalar(0.5);
+      const lift = 1 + a.distanceTo(b) / (R * 3.2); // longer hops arc higher
+      mid.normalize().multiplyScalar(R * lift);
+      const curve = new THREE.QuadraticBezierCurve3(a, mid, b);
+      const pts = curve.getPoints(24);
+      for (let j = 0; j < pts.length - 1; j++) {
+        verts.push(pts[j].x, pts[j].y, pts[j].z);
+        verts.push(pts[j + 1].x, pts[j + 1].y, pts[j + 1].z);
+      }
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.Float32BufferAttribute(verts, 3));
+    return g;
+  }, [points]);
+
+  return (
+    <lineSegments geometry={geo}>
+      <lineBasicMaterial
+        color="#ff5c85"
+        transparent
+        opacity={0.4}
+        blending={THREE.AdditiveBlending}
+        toneMapped={false}
+      />
+    </lineSegments>
+  );
+}
+
+function Pin({
+  point,
+  onSelect,
+}: {
+  point: GlobePoint;
+  onSelect: (round: number) => void;
+}) {
   const [hover, setHover] = useState(false);
   const pos = useMemo(
     () => latLongToVec3(point.lat, point.long, R + 0.02),
@@ -90,8 +133,16 @@ function Pin({ point }: { point: GlobePoint }) {
         onPointerOver={(e) => {
           e.stopPropagation();
           setHover(true);
+          document.body.style.cursor = "pointer";
         }}
-        onPointerOut={() => setHover(false)}
+        onPointerOut={() => {
+          setHover(false);
+          document.body.style.cursor = "";
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect(point.round);
+        }}
       >
         <sphereGeometry args={[hover ? size * 1.6 : size, 12, 12]} />
         <meshBasicMaterial color={color} toneMapped={false} />
@@ -126,7 +177,13 @@ function Pin({ point }: { point: GlobePoint }) {
   );
 }
 
-function Globe({ points }: { points: GlobePoint[] }) {
+function Globe({
+  points,
+  onSelect,
+}: {
+  points: GlobePoint[];
+  onSelect: (round: number) => void;
+}) {
   const group = useRef<THREE.Group>(null);
   useFrame((_, delta) => {
     if (group.current) group.current.rotation.y += delta * 0.08;
@@ -168,20 +225,32 @@ function Globe({ points }: { points: GlobePoint[] }) {
           toneMapped={false}
         />
       </mesh>
-      {points.map((p, i) => (
-        <Pin key={i} point={p} />
+      <RaceArcs points={points} />
+      {points.map((p) => (
+        <Pin key={p.round} point={p} onSelect={onSelect} />
       ))}
     </group>
   );
 }
 
 export default function CircuitGlobe({ points }: { points: GlobePoint[] }) {
+  const router = useRouter();
+  const onSelect = (round: number) => router.push(`/race/${round}`);
+
   return (
     <Canvas camera={{ position: [0, 0, 6], fov: 45 }} dpr={[1, 1.8]}>
       <ambientLight intensity={0.6} />
       <directionalLight position={[5, 3, 5]} intensity={1.2} />
       <pointLight position={[-5, -2, -3]} intensity={0.5} color="#ff2d55" />
-      <Globe points={points} />
+      <Stars
+        radius={40}
+        depth={20}
+        count={1200}
+        factor={3}
+        fade
+        speed={0.5}
+      />
+      <Globe points={points} onSelect={onSelect} />
       <OrbitControls
         enablePan={false}
         enableZoom={false}

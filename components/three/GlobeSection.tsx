@@ -27,7 +27,8 @@ export function GlobeSection({ points }: { points: GlobePoint[] }) {
         <CircuitGlobe points={points} />
       )}
       <div className="pointer-events-none absolute bottom-3 left-4 text-xs text-apex-muted">
-        Drag to rotate · <span className="text-apex-accent">●</span> next ·{" "}
+        Drag to rotate · click a pin to open ·{" "}
+        <span className="text-apex-accent">●</span> next ·{" "}
         <span className="text-apex-accent2">●</span> upcoming ·{" "}
         <span className="text-apex-muted">●</span> done
       </div>

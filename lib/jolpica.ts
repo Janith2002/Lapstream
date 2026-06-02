@@ -7,6 +7,7 @@
 
 import type {
   Race,
+  Driver,
   DriverStanding,
   ConstructorStanding,
   RaceWithResults,
@@ -122,6 +123,46 @@ export async function getRaceResults(
     REVALIDATE_RESULTS,
   );
   return data.MRData.RaceTable.Races[0] ?? null;
+}
+
+// --- Driver & constructor detail -----------------------------------------
+
+/** Every race that driver started this season, each with their single result. */
+export async function getDriverSeasonResults(
+  driverId: string,
+  season: string | number = "current",
+): Promise<RaceWithResults[]> {
+  const data = await jolpica<ResultsResp>(
+    `${season}/drivers/${driverId}/results.json?limit=100`,
+    REVALIDATE_RESULTS,
+  );
+  return data.MRData.RaceTable.Races ?? [];
+}
+
+export async function getConstructorSeasonResults(
+  constructorId: string,
+  season: string | number = "current",
+): Promise<RaceWithResults[]> {
+  const data = await jolpica<ResultsResp>(
+    `${season}/constructors/${constructorId}/results.json?limit=200`,
+    REVALIDATE_RESULTS,
+  );
+  return data.MRData.RaceTable.Races ?? [];
+}
+
+interface DriverTableResp {
+  MRData: { DriverTable: { Drivers: Driver[] } };
+}
+
+export async function getConstructorDrivers(
+  constructorId: string,
+  season: string | number = "current",
+): Promise<Driver[]> {
+  const data = await jolpica<DriverTableResp>(
+    `${season}/constructors/${constructorId}/drivers.json`,
+    REVALIDATE_STANDINGS,
+  );
+  return data.MRData.DriverTable.Drivers ?? [];
 }
 
 // --- Normalization helpers ------------------------------------------------

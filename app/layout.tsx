@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
+import { MobileTabBar } from "@/components/MobileTabBar";
 import { Disclaimer } from "@/components/Disclaimer";
 import { TimezoneProvider } from "@/components/TimezoneProvider";
 import { ScrollProgress } from "@/components/motion/ScrollProgress";
@@ -96,10 +97,14 @@ export default function RootLayout({
         <TimezoneProvider>
           <ScrollProgress />
           <Nav />
-          <main id="main" className="mx-auto w-full max-w-6xl px-4 pb-24 pt-8">
+          <main
+            id="main"
+            className="mx-auto w-full max-w-6xl px-4 pb-28 pt-8 sm:pb-24"
+          >
             {children}
           </main>
           <Disclaimer />
+          <MobileTabBar />
         </TimezoneProvider>
       </body>
     </html>

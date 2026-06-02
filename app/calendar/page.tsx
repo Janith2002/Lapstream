@@ -1,6 +1,8 @@
 import { RaceCard } from "@/components/RaceCard";
 import { GlobeSection } from "@/components/three/GlobeSection";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/motion/Reveal";
+import { CountdownTimer } from "@/components/Countdown";
+import { LocalTime } from "@/components/LocalTime";
 import { getSeasonSchedule, normalizeRace, findNextRace } from "@/lib/jolpica";
 import type { GlobePoint } from "@/components/three/CircuitGlobe";
 
@@ -23,6 +25,7 @@ export default async function CalendarPage() {
   const points: GlobePoint[] = races
     .filter((r) => !Number.isNaN(r.lat) && !Number.isNaN(r.long))
     .map((r) => ({
+      round: r.round,
       name: r.name,
       locality: r.locality,
       country: r.country,
@@ -34,6 +37,17 @@ export default async function CalendarPage() {
         new Date(r.raceStartUtc) < now &&
         next?.round !== r.round,
     }));
+
+  // Earliest upcoming session across the whole season (any session type).
+  const nextSession = races
+    .flatMap((r) =>
+      r.sessions.map((s) => ({ ...s, raceName: r.name, round: r.round })),
+    )
+    .filter((s) => s.startUtc && new Date(s.startUtc) > now)
+    .sort(
+      (a, b) =>
+        new Date(a.startUtc!).getTime() - new Date(b.startUtc!).getTime(),
+    )[0];
 
   return (
     <div className="space-y-10">
@@ -48,6 +62,30 @@ export default async function CalendarPage() {
           </p>
         </header>
       </Reveal>
+
+      {nextSession && (
+        <Reveal>
+          <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-apex-border glass p-5 sm:p-6">
+            <div>
+              <p className="text-xs uppercase tracking-widest text-apex-muted">
+                Next session
+              </p>
+              <p className="mt-1 text-lg font-bold sm:text-xl">
+                {nextSession.label}{" "}
+                <span className="text-apex-muted">· {nextSession.raceName}</span>
+              </p>
+              <p className="mt-0.5 text-sm text-apex-muted">
+                <LocalTime
+                  utcIso={nextSession.startUtc}
+                  pattern="EEE d MMM, HH:mm"
+                  showZone
+                />
+              </p>
+            </div>
+            <CountdownTimer targetUtc={nextSession.startUtc} />
+          </div>
+        </Reveal>
+      )}
 
       {points.length > 0 && (
         <Reveal direction="scale">
